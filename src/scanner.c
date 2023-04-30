@@ -4,23 +4,25 @@
 #include "scanner.h"
 #include "node.h"
 
+
 node * get_node_from_line()
-{
-
-	
+{	
 
 }
 
-void id_too_large_error_throw()
+void id_too_large_error_throw(int buffer_size)
 {
-	printf("ERRO, PALAVRA MUITO GRANDE (MAX: 63 CARACTERES)\n");
+	printf("ERRO, PALAVRA MUITO GRANDE (MAX: %d CARACTERES)\n", buffer_size-1);
 	exit(1);
-}
+} 
 
-char fread_word(FILE * f, char * buffer)
+// This function reads a string from a file, considering {'\n', ':', ';'} as separators.
+// It alsos trims leading and trailing whitespaces.
+char scanner_fread_word(FILE * f, char * buffer, int buffer_size)
 {
 	char current_char = fgetc(f);
 	char current_char_index;
+	buffer_size--;
 	
 	// Next loop ignore leading whitespaces
 	while(current_char == ' ')
@@ -31,7 +33,7 @@ char fread_word(FILE * f, char * buffer)
 	for 
 	(
 		current_char_index = 0;
-		!(current_char=='\n' || current_char==':' || current_char==';' || current_char==EOF) && current_char_index < NODE_ID_LEN;
+		!(current_char=='\n' || current_char==':' || current_char==';' || current_char==EOF) && current_char_index < buffer_size;
 		current_char_index++
 	)
 	{
@@ -50,9 +52,16 @@ char fread_word(FILE * f, char * buffer)
 			}
 			else if (current_char != ' ')
 			{
-				if (no_of_whitespaces + current_char_index >= NODE_ID_LEN)
+				if (no_of_whitespaces + current_char_index >= buffer_size)
 				{
-					id_too_large_error_throw();
+					if (ASSERT_BUFFER_SIZE)
+					{
+						id_too_large_error_throw(buffer_size);
+					}
+					else
+					{
+						sprintf(buffer, "%s%0*c", buffer, current_char_index - buffer_size, ' ');
+					}
 				}
 				// Appends any whitespaces in the middle of the string
 				else
@@ -63,10 +72,31 @@ char fread_word(FILE * f, char * buffer)
 			}
 		}
 	}
-	if (current_char_index >= NODE_ID_LEN)
+	
+	// Ideally the buffer size assertion should be implemented with macros, as the flag is hardcoded in the scanner.h header file.
+	if (ASSERT_BUFFER_SIZE)
 	{
-		id_too_large_error_throw();
+		if (current_char_index >= buffer_size)
+		{
+			id_too_large_error_throw(buffer_size);
+		}
+		buffer[current_char_index + 1] = '\0';
 	}
+	else
+	{
+		if (current_char_index >= buffer_size)
+		{
+			buffer[current_char_index] = '\0';
+		}
+		buffer[current_char_index + 1] = '\0';
+		
+		// Consumes any character after the buffer size is reached
+		while (!(current_char=='\n' || current_char==':' || current_char==';' || current_char==EOF))
+		{
+			current_char = fgetc(f);
+		}
+		
+	}	
 	return current_char;
 }
 
