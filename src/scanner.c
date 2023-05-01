@@ -2,13 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "scanner.h"
-#include "node.h"
+#include "graph.h"
 
-
-node * get_node_from_line()
-{	
-
-}
 
 void id_too_large_error_throw(int buffer_size)
 {
