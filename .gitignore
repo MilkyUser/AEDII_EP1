@@ -1,2 +1,5 @@
-.git/
-./src/map/
+git/
+src/map/
+Wordlists-PT-BR/
+venv/
+kosaraju
