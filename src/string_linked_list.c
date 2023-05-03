@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include "graph.h"
 #include "string_linked_list.h"
 
@@ -41,6 +42,21 @@ bool string_linked_list_append(string_linked_list * list, char * value)
 	return true;
 }
 
+bool string_linked_list_push(string_linked_list * list, char * value)
+{
+	string_linked_list_node * new_node = calloc(1, sizeof(string_linked_list_node)); 
+	new_node->value = calloc(1, NODE_ID_LEN);
+	if (new_node == NULL || new_node->value == NULL)
+	{
+		return false;
+	}
+	strncpy(new_node->value, value, NODE_ID_LEN);
+	new_node->next = list->head->next;
+	list->head->next = new_node;
+	list->count++;
+	return true;
+}
+
 char * string_linked_list_pull(string_linked_list * list)
 {
 	char * value = calloc(1, NODE_ID_LEN);
@@ -55,5 +71,41 @@ char * string_linked_list_pull(string_linked_list * list)
 	}
 	list->tail = current_node;
 	return value;
+}
+
+char * string_linked_list_get(string_linked_list * list, int v)
+{
+	// This is a naive implementation of the get function
+	// a better solution should keep track of each index at each loaded list
+	if (v > list->count)
+	{
+		return NULL;
+	} 
+	string_linked_list_node * current_node = list->head;
+	for (int i=0; i<v; i++)
+	{
+		current_node = current_node->next;
+	}
+	return current_node->value;	
+}
+
+void fprintf_string_linked_list(FILE * f, string_linked_list * list)
+{	
+	fprintf(f, "PRINTING LIST: ");
+	string_linked_list_node * slln = malloc(sizeof(string_linked_list_node));
+	slln = list->head->next;
+	int i = 1;
+	if (list->count > 0)
+	{
+		fprintf(f, "[%d] %s", i, slln->value);
+	}
+	slln = slln->next;
+	for (; i < list->count; i++)
+	{
+		fprintf(f, " -> [%d] %s", i, slln->value);	
+		slln = slln->next;
+	}
+	fprintf(f, "\n");
+	free(slln);
 }
 

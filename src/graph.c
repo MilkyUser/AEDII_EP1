@@ -34,7 +34,7 @@ map_linked_list_t * transpose_graph(map_linked_list_t * original_graph)
 	return transposed_graph_pointer;
 }
 
-void print_graph(FILE * f, map_linked_list_t * graph)
+void fprint_graph(FILE * f, map_linked_list_t * graph)
 {
 	const char *key;
 	map_iter_t iter = map_iter(graph);
@@ -54,5 +54,57 @@ void print_graph(FILE * f, map_linked_list_t * graph)
 			fprintf(f, "[%s]\n", neighbor->value);
 		}
 	}
+}
+
+void dfs1_step(map_linked_list_t * graph, char * node, map_bool_t * discovered, string_linked_list * topological_sort)
+{
+	printf("Discovering %s\n", node);
+	map_set(discovered, node, true);
+	// iterates over neighbors
+	for (int i=1; i < (*map_get(graph, node))->count; i++)
+	{
+		char * neighbor = string_linked_list_get(*map_get(graph, node), i);
+		// Check if discovered
+		if (*map_get(discovered, neighbor))
+		{
+			continue;
+		}
+		dfs1_step(graph, neighbor, discovered, topological_sort);
+	}
+	
+	// after iteration marks as visited
+	printf("ENTRA %s\n", node);
+	string_linked_list_push(topological_sort, node);
+}
+
+string_linked_list * dfs1(map_linked_list_t * graph)
+{
+	string_linked_list * topological_sort = string_linked_list_init();
+	map_bool_t discovered;
+	map_init(&discovered);
+	
+	// Populates discovered bool map
+	const char * node;
+	map_iter_t graph_iter = map_iter(graph);
+
+	while ((node = map_next(graph, &graph_iter)))
+	{
+		map_set(&discovered, node, false);
+	}
+	
+	printf("\n");
+	graph_iter = map_iter(&discovered);
+	while ((node = map_next(&discovered, &graph_iter)))
+	{
+		if (*map_get(&discovered, node))
+		{
+			continue;
+		}
+		printf("\tAttempting begin at %s -> %s\n", node, *map_get(&discovered, node) ? "true": "false"); 
+		dfs1_step(graph, (char *) node, &discovered, topological_sort);
+	}
+	map_deinit(&discovered);
+	
+	return topological_sort;
 }
 

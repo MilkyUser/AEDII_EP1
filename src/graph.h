@@ -10,8 +10,9 @@
 #define NODE_ID_LEN 64 
 
 typedef map_t(string_linked_list*) map_linked_list_t;
+typedef map_t(bool) map_bool_t; 
 map_linked_list_t * transpose_graph(map_linked_list_t * original_graph);
 void print_graph(FILE * f, map_linked_list_t * graph);
-void dfs();
+string_linked_list * dfs1(map_linked_list_t * graph);
 
 #endif

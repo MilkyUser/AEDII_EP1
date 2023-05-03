@@ -12,8 +12,7 @@ int main()
 {
 	uint16_t no_nodes;
 	scanf("%" SCNu16, &no_nodes);
-	fgetc(stdin); // This fgetc call consumes the new line character following the first read
-	char ** a = calloc(no_nodes, sizeof(char *)); 	
+	fgetc(stdin); // This fgetc call consumes the new line character following the first read	
 	map_linked_list_t original_graph;
 	map_init(&original_graph);
 	
@@ -34,12 +33,18 @@ int main()
 			string_linked_list_append(vicinity, value);
 		}
 	}
-	print_graph(stdout, &original_graph);
+	fprint_graph(stdout, &original_graph);
 	
+	printf("------------------\n");
+	printf("       DFS\n");
+	printf("");
+	string_linked_list * my_list = dfs1(&original_graph);
+	printf("%d ", my_list->count);
+	fprintf_string_linked_list(stdout, my_list);	
 	printf("------------------\n");
 	
 	map_linked_list_t transposed_graph = *transpose_graph(&original_graph);
-	print_graph(stdout, &transposed_graph);
+	fprint_graph(stdout, &transposed_graph);
 	
 	printf("FINISH\n");
 	return 0;
