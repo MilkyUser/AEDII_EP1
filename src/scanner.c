@@ -16,7 +16,7 @@ void id_too_large_error_throw(int buffer_size)
 char scanner_fread_word(FILE * f, char * buffer, int buffer_size)
 {
 	char current_char = fgetc(f);
-	char current_char_index;
+	int current_char_index;
 	buffer_size--;
 	
 	// Next loop ignore leading whitespaces
