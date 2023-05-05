@@ -73,6 +73,21 @@ char * string_linked_list_pull(string_linked_list * list)
 	return value;
 }
 
+char * string_linked_list_pop(string_linked_list * list)
+{
+	if (list->count == 0)
+	{
+		return NULL;
+	}
+	char * value = calloc(1, NODE_ID_LEN);
+	strncpy(value, list->head->next->value, NODE_ID_LEN);
+	string_linked_list_node * popped = list->head->next;
+	list->head->next = popped->next;
+	free(popped->value);
+	free(popped);
+	return value;
+}
+
 char * string_linked_list_get(string_linked_list * list, int v)
 {
 	// This is a naive implementation of the get function
@@ -89,20 +104,23 @@ char * string_linked_list_get(string_linked_list * list, int v)
 	return current_node->value;	
 }
 
-void fprintf_string_linked_list(FILE * f, string_linked_list * list)
+void fprintf_string_linked_list(FILE * f, string_linked_list * list, char * sep)
 {	
-	fprintf(f, "PRINTING LIST: ");
+	if (list->count <= 0)
+	{
+		return;
+	}
 	string_linked_list_node * slln = malloc(sizeof(string_linked_list_node));
 	slln = list->head->next;
 	int i = 1;
 	if (list->count > 0)
-	{
-		fprintf(f, "[%d] %s", i, slln->value);
+	{	
+		fprintf(f, "%s", slln->value);
 	}
 	slln = slln->next;
 	for (; i < list->count; i++)
 	{
-		fprintf(f, " -> [%d] %s", i, slln->value);	
+		fprintf(f, "%s%s", sep, slln->value);	
 		slln = slln->next;
 	}
 	fprintf(f, "\n");

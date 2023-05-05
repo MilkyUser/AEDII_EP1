@@ -4,8 +4,8 @@ CFLAGS = -Wall
 all: get_dependencies
 	make kosaraju
 
-kosaraju: kosaraju.o scanner.o map.o graph.o string_linked_list.o
-	gcc -o ../kosaraju kosaraju.o scanner.o map.o string_linked_list.o graph.o
+kosaraju: kosaraju.o scanner.o map.o graph.o string_linked_list.o strongly_connected_component.o
+	gcc -o ../kosaraju kosaraju.o scanner.o map.o string_linked_list.o graph.o strongly_connected_component.o
 	make clean
 
 map.o: 

@@ -23,6 +23,6 @@ bool string_linked_list_push(string_linked_list * list, char * value); //inserts
 char * string_linked_list_pull(string_linked_list * list); //removes last item of the list - O(n)
 char * string_linked_list_pop(string_linked_list * list); //removes first item of the list - O(1)
 char * string_linked_list_get(string_linked_list * list, int n); // gets nth item of list, returns null if n > count
-void fprintf_string_linked_list(FILE * f, string_linked_list * list);
+void fprintf_string_linked_list(FILE * f, string_linked_list * list, char * sep);
 #endif 
 

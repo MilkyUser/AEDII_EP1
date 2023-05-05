@@ -1,6 +1,7 @@
 #include "string_linked_list.h"
 #include "./map/src/map.h"
 #include "graph.h"
+#include "strongly_connected_component.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -106,5 +107,40 @@ string_linked_list * dfs1(map_linked_list_t * graph)
 	map_deinit(&discovered);
 	
 	return topological_sort;
+}
+
+sccs_list * dfs2(map_linked_list_t * graph, string_linked_list * topological_order)
+{
+	map_bool_t discovered;
+	map_init(&discovered);
+	sccs_list * sccs = sccs_list_init();
+	if (sccs == NULL)
+	{
+		printf("ERRO! Alocação de lista de componentes fortememente conectadas falhou");
+		exit(1);
+	}
+
+	// Populates discovered bool map
+	const char * node;
+	map_iter_t graph_iter = map_iter(graph);
+	
+	while ((node = map_next(graph, &graph_iter)))
+	{
+		map_set(&discovered, node, false);
+	}
+
+    for (int i=1; i < topological_order->count; i++)
+    {
+    	string_linked_list * scc_nodes = string_linked_list_init();
+        char * current_node = string_linked_list_pop(topological_order);
+		if (!map_get(&discovered, current_node))
+		{
+			fprintf(stdout, "DFS1 STEP ON: \t%s\n", current_node);
+			dfs1_step(graph, current_node, &discovered, scc_nodes);
+		}
+		strongly_connected_component * scc = scc_init(scc_nodes);
+		sccs_list_push(sccs, scc);
+	}
+	return sccs;
 }
 

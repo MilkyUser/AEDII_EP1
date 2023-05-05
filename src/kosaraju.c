@@ -7,6 +7,7 @@
 #include "scanner.h"
 #include "./map/src/map.h"
 #include "string_linked_list.h"
+#include "strongly_connected_component.h"
 
 int main()
 {
@@ -35,18 +36,25 @@ int main()
 	}
 	fprint_graph(stdout, &original_graph);
 	
-	printf("------------------\n");
-	printf("       DFS\n");
-	printf("");
-	string_linked_list * my_list = dfs1(&original_graph);
-	printf("%d ", my_list->count);
-	fprintf_string_linked_list(stdout, my_list);	
-	printf("------------------\n");
+	printf("-------------------\n");
+	
+	printf(" TOPOLOGICAL ORDER\n\n");
+	string_linked_list * topological_order = dfs1(&original_graph);
+	fprintf_string_linked_list(stdout, topological_order, " ");	
+	
+	printf("-------------------\n");
 	
 	map_linked_list_t transposed_graph = *transpose_graph(&original_graph);
 	fprint_graph(stdout, &transposed_graph);
 	
-	printf("FINISH\n");
+	printf("-------------------\n");
+	printf("       SCCS\n\n");
+
+	sccs_list * sccs = dfs2(&transposed_graph, topological_order);
+	fprintf(stdout, "ENTRA\n");
+	fprint_sccs(stdout, sccs, "| ");
+	
+	printf("\nFINISH\n");
 	return 0;
 }
 
