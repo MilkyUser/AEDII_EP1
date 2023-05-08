@@ -11,6 +11,7 @@
 
 int main()
 {
+	char * sep = "|";
 	uint16_t no_nodes;
 	scanf("%" SCNu16, &no_nodes);
 	fgetc(stdin); // This fgetc call consumes the new line character following the first read	
@@ -44,7 +45,25 @@ int main()
 
 	sccs_list * sccs = dfs2(&transposed_graph, topological_order);
 	fprintf(stdout, "\n");
-	fprint_sccs(stdout, sccs, "| ");
+	fprint_sccs(stdout, sccs, " | ");
+	map_linked_list_t sccs_graph;
+	map_init(&sccs_graph);
+	strongly_connected_component * scc = sccs->head;
+	for (int i=0; i<sccs->count; i++)
+	{
+		char * key = calloc(1, NODE_ID_LEN * scc->nodes->count + (scc->nodes->count-1)*strlen(sep) + 1); 
+		char ** scc_nodes = scc_to_string_arr(scc);
+		strcpy(key, scc_nodes[0]);
+		for (int i=1; i<scc->nodes->count; i++)
+		{
+			strcat(key, sep);
+			strcat(key, scc_nodes[i]);
+		}
+		map_set(&sccs_graph, key, string_linked_list_init());
+		scc = scc->next;
+	}
+	
+	fprint_graph(stdout, &sccs_graph);
 	
 	printf("\nFINISH\n");
 	return 0;

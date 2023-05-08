@@ -8,6 +8,7 @@ typedef struct strongly_connected_component
 {
 	string_linked_list * nodes;
 	struct strongly_connected_component * next;
+	struct strongly_connected_component * neigbors;
 } strongly_connected_component;
 
 typedef struct sccs_list
@@ -22,5 +23,6 @@ void sccs_list_push(sccs_list * list, strongly_connected_component * new_scc);
 bool scc_contains(strongly_connected_component * scc, char * node);
 bool scc_equals(strongly_connected_component * scc1, strongly_connected_component * scc2); // compares two scc's, returns true if both have the same elements
 void fprint_sccs(FILE * f, sccs_list * list, char * sep);
+char ** scc_to_string_arr(strongly_connected_component * scc);
 
 #endif

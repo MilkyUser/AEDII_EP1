@@ -144,8 +144,3 @@ sccs_list * dfs2(map_linked_list_t * graph, string_linked_list * topological_ord
 	return sccs;
 }
 
-node_cmp(char * node1, char * node2)
-{
-	return strncmp(toupper(node1), toupper(node2), NODE_ID_LEN);
-}
-

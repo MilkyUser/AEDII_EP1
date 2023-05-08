@@ -112,13 +112,12 @@ void fprintf_string_linked_list(FILE * f, string_linked_list * list, char * sep)
 	}
 	string_linked_list_node * slln = malloc(sizeof(string_linked_list_node));
 	slln = list->head->next;
-	int i = 1;
 	if (list->count > 0)
 	{	
 		fprintf(f, "%s", slln->value);
 	}
 	slln = slln->next;
-	for (; i < list->count; i++)
+	for (int i = 1; i < list->count; i++)
 	{
 		fprintf(f, "%s%s", sep, slln->value);	
 		slln = slln->next;
