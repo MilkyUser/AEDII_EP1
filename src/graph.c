@@ -4,6 +4,7 @@
 #include "strongly_connected_component.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 map_linked_list_t * transpose_graph(map_linked_list_t * original_graph)
 {
@@ -57,25 +58,25 @@ void fprint_graph(FILE * f, map_linked_list_t * graph)
 	}
 }
 
-void dfs1_step(map_linked_list_t * graph, char * node, map_bool_t * discovered, string_linked_list * topological_sort)
+void dfs_step(map_linked_list_t * graph, char * node, map_bool_t * discovered, string_linked_list * topological_sort)
 {
-	printf("Discovering %s\n", node);
 	map_set(discovered, node, true);
 	// iterates over neighbors
-	for (int i=1; i < (*map_get(graph, node))->count; i++)
+	string_linked_list * neighbors = *map_get(graph, node);  
+	for (int i=1; i <= neighbors->count; i++)
 	{
-		char * neighbor = string_linked_list_get(*map_get(graph, node), i);
+		char * neighbor = string_linked_list_get(neighbors, i);
 		// Check if discovered
 		if (*map_get(discovered, neighbor))
 		{
 			continue;
 		}
-		dfs1_step(graph, neighbor, discovered, topological_sort);
+		dfs_step(graph, neighbor, discovered, topological_sort);
 	}
 	
 	// after iteration marks as visited
-	printf("ENTRA %s\n", node);
 	string_linked_list_push(topological_sort, node);
+	// TODO: free neighbors linked list
 }
 
 string_linked_list * dfs1(map_linked_list_t * graph)
@@ -94,15 +95,14 @@ string_linked_list * dfs1(map_linked_list_t * graph)
 	}
 	
 	printf("\n");
-	graph_iter = map_iter(&discovered);
-	while ((node = map_next(&discovered, &graph_iter)))
+	graph_iter = map_iter(graph);
+	while ((node = map_next(graph, &graph_iter)))
 	{
 		if (*map_get(&discovered, node))
 		{
 			continue;
 		}
-		printf("\tAttempting begin at %s -> %s\n", node, *map_get(&discovered, node) ? "true": "false"); 
-		dfs1_step(graph, (char *) node, &discovered, topological_sort);
+		dfs_step(graph, (char *) node, &discovered, topological_sort);
 	}
 	map_deinit(&discovered);
 	
@@ -129,18 +129,23 @@ sccs_list * dfs2(map_linked_list_t * graph, string_linked_list * topological_ord
 		map_set(&discovered, node, false);
 	}
 
-    for (int i=1; i < topological_order->count; i++)
+    for (int i=1; i <= topological_order->count; i++)
     {
-    	string_linked_list * scc_nodes = string_linked_list_init();
         char * current_node = string_linked_list_pop(topological_order);
-		if (!map_get(&discovered, current_node))
+		if (*map_get(&discovered, current_node))
 		{
-			fprintf(stdout, "DFS1 STEP ON: \t%s\n", current_node);
-			dfs1_step(graph, current_node, &discovered, scc_nodes);
+			continue;
 		}
+		string_linked_list * scc_nodes = string_linked_list_init();
+		dfs_step(graph, current_node, &discovered, scc_nodes);
 		strongly_connected_component * scc = scc_init(scc_nodes);
 		sccs_list_push(sccs, scc);
 	}
 	return sccs;
+}
+
+node_cmp(char * node1, char * node2)
+{
+	return strncmp(toupper(node1), toupper(node2), NODE_ID_LEN);
 }
 

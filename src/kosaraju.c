@@ -34,24 +34,16 @@ int main()
 			string_linked_list_append(vicinity, value);
 		}
 	}
-	fprint_graph(stdout, &original_graph);
 	
-	printf("-------------------\n");
+	char mode;
+	scanf("%c", &mode);
 	
-	printf(" TOPOLOGICAL ORDER\n\n");
-	string_linked_list * topological_order = dfs1(&original_graph);
-	fprintf_string_linked_list(stdout, topological_order, " ");	
-	
-	printf("-------------------\n");
-	
+	string_linked_list * topological_order = dfs1(&original_graph);	
 	map_linked_list_t transposed_graph = *transpose_graph(&original_graph);
-	fprint_graph(stdout, &transposed_graph);
-	
-	printf("-------------------\n");
-	printf("       SCCS\n\n");
+	printf("       SCCS\n");
 
 	sccs_list * sccs = dfs2(&transposed_graph, topological_order);
-	fprintf(stdout, "ENTRA\n");
+	fprintf(stdout, "\n");
 	fprint_sccs(stdout, sccs, "| ");
 	
 	printf("\nFINISH\n");
