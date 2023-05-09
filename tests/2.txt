@@ -8,5 +8,5 @@ jacket:
 socks: shoes;
 shoes:
 watch:
-1
+2
 
