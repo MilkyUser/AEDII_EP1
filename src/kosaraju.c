@@ -8,17 +8,18 @@
 #include "./map/src/map.h"
 #include "string_linked_list.h"
 #include "strongly_connected_component.h"
+#include "gen.h"
 
 int main(int argc, char ** argv)
 {
-	if (argc > 2)
+	if (argc == 3)
 	{
-		// TODO: Call generator
+		fprint_graph(stdout, generate_graph(atoi(argv[1]), atoi(argv[2])), ": ", "; ", "\n");
 		return 0;
 	}
-
+	
 	char * sep = "";
-	if (argc > 1)
+	if (argc == 2)
 	{
 		sep = argv[1];
 	}
