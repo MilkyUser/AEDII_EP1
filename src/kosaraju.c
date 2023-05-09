@@ -11,6 +11,12 @@
 
 int main(int argc, char ** argv)
 {
+	if (argc > 2)
+	{
+		// TODO: Call generator
+		return 0;
+	}
+
 	char * sep = "";
 	if (argc > 1)
 	{
@@ -43,17 +49,24 @@ int main(int argc, char ** argv)
 	int mode;
 	scanf("%d", &mode);
 	
-	string_linked_list * topological_order = dfs1(original_graph);	
 	map_linked_list_t * transposed_graph = transpose_graph(original_graph);
-	
-	if (mode==2)
+	string_linked_list * topological_order;
+	map_linked_list_t * sccs;
+	if (mode == 2)
 	{
-		map_linked_list_t tmp = *original_graph;
-    	*original_graph = *transposed_graph;
-    	*transposed_graph = tmp;
+		topological_order = dfs1(transposed_graph);
+		sccs = dfs2(original_graph, topological_order, sep);
+	} else
+	{
+		if (mode != 1)
+		{
+			fprintf(stdout, "ERRO! MODO INVÁLIDO1\n");
+			return 1;
+		}
+		topological_order = dfs1(original_graph);
+		sccs = dfs2(transposed_graph, topological_order, sep);
 	}
-	
-	map_linked_list_t * sccs = dfs2(transposed_graph, topological_order, sep);
+
 	map_linked_list_t sccs_graph;
 	map_init(&sccs_graph);
 	const char * node;
