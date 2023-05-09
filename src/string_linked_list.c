@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include "graph.h"
 #include "string_linked_list.h"
+#include "./map/src/map.h"
 
 string_linked_list * string_linked_list_init()
 {
@@ -91,7 +92,7 @@ char * string_linked_list_pop(string_linked_list * list)
 char * string_linked_list_get(string_linked_list * list, int v)
 {
 	// This is a naive implementation of the get function
-	// a better solution should keep track of each index at each loaded list
+	// a iterator should be properly implemented
 	if (v > list->count)
 	{
 		return NULL;
@@ -124,5 +125,23 @@ void fprintf_string_linked_list(FILE * f, string_linked_list * list, char * sep)
 	}
 	fprintf(f, "\n");
 	free(slln);
+}
+
+bool string_linked_list_contains(string_linked_list * list, char * value)
+{
+	if (list->count <= 0)
+	{
+		return false;
+	}
+	string_linked_list_node * slln = list->head->next;
+	for (int i = 1; i <= list->count; i++)
+	{
+		if (strcmp(slln->value, value) == 0)
+		{
+			return true;
+		}
+		slln = slln->next;
+	}
+	return false;
 }
 
