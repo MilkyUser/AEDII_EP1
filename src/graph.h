@@ -8,7 +8,7 @@
 #include "strongly_connected_component.h"
 #include "./map/src/map.h"
 
-#define NODE_ID_LEN 64 
+#define NODE_ID_LEN 1024 
 
 typedef map_t(string_linked_list*) map_linked_list_t;
 typedef map_t(bool) map_bool_t; 
