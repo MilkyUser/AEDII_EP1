@@ -16,6 +16,13 @@ def generate_graph(v: int, a: int, alphabet: str = 'abc')->dict: # returns a dic
 			no_lines = sum(1 for line in names_file)		
 			for _ in range(v):
 				graph[getline(names_file.name, random.randrange(no_lines)).replace('\n', '')] = []
+	
+	if alphabet.upper() == 'AIRLINES':
+		with open('./airlines-dict.txt', 'r') as IATA_file:
+			no_lines = sum(1 for line in IATA_file)		
+			for _ in range(v):
+				graph[getline(IATA_file.name, random.randrange(no_lines)).replace('\n', '')] = []
+
 	elif alphabet.upper() == 'ABC':
 		if v > 26*2:
 			raise ValueError(f'número máximo de vértices para modo "abc" = {26*2}')
@@ -39,7 +46,12 @@ def generate_graph(v: int, a: int, alphabet: str = 'abc')->dict: # returns a dic
 	
 	for key in graph.keys():
 		graph[key] = random.sample(graph.keys(), int(dist_a.pop()))
-	
+		
+	if alphabet.upper() == 'AIRLINES':
+		print(graph)
+		graph = {key: ([random.choice(list(graph.keys()))] if len(value) == 0 else value) for key, value in graph.items()}
+		print(graph)
+		
 	return graph
 
 

@@ -50,6 +50,7 @@ Onde:
 * e é a quantidade de arestas do grafo.
 * a é uma entrada opcional que representa o alfabeto a ser usado para a geração do grafo, são valores aceitos:
     * ``nomes``: para uso do dicionário de nomes em https://github.com/mauricioomateus/Wordlists-PT-BR
+    * ``airlines``: para uso do dicionário com os códigos IATA dos aeroportos da América do Sul.
     * ``abc``: para uso de dígitos de a-z, A-Z, 0-9 (nesta ordem. Esta opção é escolhida por padrão caso a opção ``<a>``
     seja omitida.
 
