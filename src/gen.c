@@ -37,7 +37,7 @@ map_linked_list_t * generate_graph(int no_vertices, int no_edges)
 		printf("ERRO! Número de arestas deve ser menor que quadrado de vértices");
 		exit(1);
 	}
-	if (no_edges > 62)
+	if (no_vertices > 62)
 	{
 		printf("ERRO! A função geradora de grafos só aceita até 62 vértices");
 		exit(1);
